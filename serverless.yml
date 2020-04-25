@@ -29,3 +29,62 @@ functions:
       - http:
           method: get
           path: hello
+resources:
+  Resources:
+    ApplicationTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: S
+          - AttributeName: date_created
+            AttributeType: S
+          - AttributeName: company_name
+            AttributeType: S
+          - AttributeName: date_applied
+            AttributeType: S
+          - AttributeName: position_name
+            AttributeType: S
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        KeySchema: #required
+          - AttributeName: user_id
+            KeyType: HASH
+          - AttributeName: date_created
+            KeyType: RANGE
+        TableName: jhd_applications
+        GlobalSecondaryIndexes:
+          - IndexName: jhd_application_byPosition
+            Projection:
+                ProjectionType: ALL
+            KeySchema:
+              - AttributeName: user_id
+                KeyType: HASH
+              - AttributeName: position_name
+                KeyType: RANGE
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          - IndexName: jhd_application_byCompany
+            Projection:
+                ProjectionType: ALL
+            KeySchema:
+              - AttributeName: user_id
+                KeyType: HASH
+              - AttributeName: company_name
+                KeyType: RANGE
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          - IndexName: jhd_application_byDateApplied
+            Projection:
+                ProjectionType: ALL
+            KeySchema:
+              - AttributeName: user_id
+                KeyType: HASH
+              - AttributeName: date_applied
+                KeyType: RANGE
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
