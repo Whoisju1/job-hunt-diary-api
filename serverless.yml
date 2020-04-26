@@ -29,13 +29,31 @@ functions:
       - http:
           method: get
           path: hello
+
 resources:
   Resources:
+    # Authentication with AWS Cognito User Pool
+    UserPool:
+      Type: "AWS::Cognito::UserPool"
+      Properties:
+        Schema:
+          - AttributeDataType: String
+            Mutable: true
+            Name: family_name # first name
+            Required: true
+          - AttributeDataType: String
+            Mutable: true
+            Name: given_name # last name
+            Required: true
+        UserPoolName: JobHuntDiaryUserPool
+        UsernameAttributes:
+          - email # User uses email address as username
+
     ApplicationTable:
       Type: "AWS::DynamoDB::Table"
       Properties:
         AttributeDefinitions:
-          - AttributeName: user_id
+          - AttributeName: user_id # This is the user's email
             AttributeType: S
           - AttributeName: date_created
             AttributeType: S
